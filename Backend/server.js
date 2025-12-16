@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 
-// 1. Import your routes
 const ticketRoutes = require('./routes/ticketRoutes'); 
 
 const app = express();
@@ -11,8 +10,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 2. Link your routes to the /api/tickets path
-// This tells the server: "Any request starting with /api/tickets should use ticketRoutes.js"
 app.use('/api/tickets', ticketRoutes); 
 
 mongoose.connect(process.env.MONGO_URI)

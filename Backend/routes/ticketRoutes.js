@@ -1,8 +1,7 @@
 const express = require('express');
-const router = express.Router(); // This line was likely missing
+const router = express.Router(); 
 const Ticket = require('../models/Ticket');
 
-// A simple manual categorizer (since we are not using AI)
 const getManualCategory = (desc) => {
   const text = desc.toLowerCase();
   if (text.includes("wifi") || text.includes("internet")) return "Network";
@@ -11,7 +10,6 @@ const getManualCategory = (desc) => {
   return "Software"; 
 };
 
-// Now 'router' will be defined here
 router.post('/create', async (req, res) => {
   try {
     const { title, description } = req.body;
@@ -34,7 +32,6 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-// This route handles GET http://localhost:5000/api/tickets/
 router.get('/', async (req, res) => {
   try {
     const allTickets = await Ticket.find().sort({ createdAt: -1 });

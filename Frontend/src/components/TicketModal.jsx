@@ -13,13 +13,12 @@ const TicketModal = ({ isOpen, onClose, onTicketCreated }) => {
     e.preventDefault();
     setLoading(true);
     try {
-      // Point this to your Backend URL
       const res = await axios.post('http://localhost:5000/api/tickets/create', {
         title,
         description
       });
-      onTicketCreated(res.data); // Update the dashboard list
-      onClose(); // Close the popup
+      onTicketCreated(res.data); 
+      onClose(); 
       setTitle('');
       setDescription('');
     } catch (err) {
