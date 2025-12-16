@@ -1,22 +1,23 @@
 const express = require('express');
-const router = express.Router();
+const router = express.Router(); // This line was likely missing
 const Ticket = require('../models/Ticket');
-const { categorizeTicket } = require('../utils/aiHelper'); // Import the AI helper
 
+// A simple manual categorizer (since we are not using AI)
+const getManualCategory = (desc) => {
+  const text = desc.toLowerCase();
+  if (text.includes("wifi") || text.includes("internet")) return "Network";
+  if (text.includes("laptop") || text.includes("hardware") || text.includes("printer")) return "Hardware";
+  if (text.includes("login") || text.includes("password") || text.includes("account")) return "Access";
+  return "Software"; 
+};
+
+// Now 'router' will be defined here
 router.post('/create', async (req, res) => {
   try {
     const { title, description } = req.body;
+    const category = getManualCategory(description);
 
-    // 1. Call the AI to get a category
-    const aiCategory = await categorizeTicket(description);
-
-    // 2. Create the ticket with the AI's category
-    const newTicket = new Ticket({ 
-      title, 
-      description,
-      category: aiCategory 
-    });
-
+    const newTicket = new Ticket({ title, description, category });
     await newTicket.save();
     res.status(201).json(newTicket);
   } catch (err) {
@@ -24,4 +25,24 @@ router.post('/create', async (req, res) => {
   }
 });
 
+router.delete('/:id', async (req, res) => {
+  try {
+    await Ticket.findByIdAndDelete(req.params.id);
+    res.json({ message: "Ticket deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// This route handles GET http://localhost:5000/api/tickets/
+router.get('/', async (req, res) => {
+  try {
+    const allTickets = await Ticket.find().sort({ createdAt: -1 });
+    res.json(allTickets);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Ensure you have this at the bottom!
 module.exports = router;

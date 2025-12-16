@@ -13,16 +13,18 @@ const TicketModal = ({ isOpen, onClose, onTicketCreated }) => {
     e.preventDefault();
     setLoading(true);
     try {
+      // Point this to your Backend URL
       const res = await axios.post('http://localhost:5000/api/tickets/create', {
         title,
         description
       });
-      onTicketCreated(res.data);
-      onClose();
+      onTicketCreated(res.data); // Update the dashboard list
+      onClose(); // Close the popup
       setTitle('');
       setDescription('');
     } catch (err) {
       console.error("Submission failed", err);
+      alert("Make sure your Backend server is running on port 5000");
     }
     setLoading(false);
   };
@@ -41,8 +43,8 @@ const TicketModal = ({ isOpen, onClose, onTicketCreated }) => {
           <div>
             <label className="block text-sm font-semibold text-slate-600 mb-2">Subject</label>
             <input 
-              className="w-full border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all"
-              placeholder="e.g., Cannot access VPN"
+              className="w-full border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-600 outline-none transition-all"
+              placeholder="e.g., PC won't turn on"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
@@ -51,7 +53,7 @@ const TicketModal = ({ isOpen, onClose, onTicketCreated }) => {
           <div>
             <label className="block text-sm font-semibold text-slate-600 mb-2">Issue Details</label>
             <textarea 
-              className="w-full border border-slate-200 rounded-xl p-3 h-32 focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all resize-none"
+              className="w-full border border-slate-200 rounded-xl p-3 h-32 focus:ring-2 focus:ring-blue-600 outline-none transition-all resize-none"
               placeholder="Describe what's happening..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -61,9 +63,9 @@ const TicketModal = ({ isOpen, onClose, onTicketCreated }) => {
           <button 
             type="submit"
             disabled={loading}
-            className="w-full bg-slate-900 hover:bg-slate-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-blue-200 transition-all flex items-center justify-center gap-2 active:scale-95 disabled:opacity-70"
+            className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 active:scale-95 disabled:opacity-70"
           >
-            {loading ? "AI is Categorizing..." : "Submit Ticket"} 
+            {loading ? "Saving..." : "Submit Ticket"} 
             {!loading && <Send size={18} />}
           </button>
         </form>
