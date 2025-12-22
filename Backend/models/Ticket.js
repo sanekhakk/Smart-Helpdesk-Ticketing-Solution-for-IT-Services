@@ -1,11 +1,21 @@
 const mongoose = require('mongoose');
 
 const TicketSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  description: { type: String, required: true },
-  status: { type: String, default: 'Open' }, 
-  priority: { type: String, default: 'Medium' }, 
-  category: { type: String, default: 'Uncategorized' }, 
+  title: String,
+  description: String,
+  category: String,
+  status: {
+    type: String,
+    enum: ['Open', 'Closed', 'Escalated','Processing'],
+    default: 'Open'
+  },
+  messages: [
+    {
+      role: String, // 'user' | 'assistant'
+      content: String,
+      createdAt: { type: Date, default: Date.now }
+    }
+  ],
   createdAt: { type: Date, default: Date.now }
 });
 
