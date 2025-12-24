@@ -1,19 +1,71 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Dashboard from './components/Dashboard.jsx';
 import LandingPage from './components/LandingPage.jsx';
+import AuthPage from './components/AuthPage.jsx';
+import VerifyOtp from './components/VerifyOtp.jsx';
+import { AppWindow } from 'lucide-react';
+import Features from './components/Features.jsx';
 
+// src/App.jsx
 function App() {
-  const [showDashboard, setShowDashboard] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null); // New state to hold user info
+  const navigate = useNavigate();
 
-  const handleLogout = () => setShowDashboard(false);
+
+  // Function to handle landing page redirection
+  const handleLandingEnter = (mode) => {
+    // Navigate to auth and pass the desired mode (login or signup) via state
+    navigate("/auth", { state: { initialMode: mode } });
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setUser(null);
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/");
+  };
+
+  const handleLogin = (userData) => {
+    setIsAuthenticated(true);
+    setUser(userData); // Store the user object (id, name, email)
+  };
+  useEffect(() => {
+  const token = localStorage.getItem("token");
+  const savedUser = localStorage.getItem("user");
+  if (token && savedUser) {
+    setIsAuthenticated(true);
+    setUser(JSON.parse(savedUser));
+  }
+}, []);
 
   return (
     <div className="min-h-screen">
-      {showDashboard ? (
-        <Dashboard onLogout={handleLogout} />
-      ) : (
-        <LandingPage onEnter={() => setShowDashboard(true)} />
-      )}
+      <Routes>
+        <Route path="/" element={<LandingPage onEnter={(mode) => handleLandingEnter(mode)} />} />
+        <Route 
+          path="/auth" 
+          element={<AuthPage onLoginSuccess={handleLogin} />} 
+        />
+        <Route
+          path="/verify-otp"
+          element={<VerifyOtp onLoginSuccess={handleLogin} />}
+        />
+        <Route path="/features" element={<Features />} />
+        <Route
+          path="/dashboard"
+          element={
+            isAuthenticated ? (
+              <Dashboard onLogout={handleLogout} user={user} /> // Pass user to Dashboard
+            ) : (
+              <Navigate to="/auth" />
+            )
+          }
+        />
+        
+      </Routes>
     </div>
   );
 }

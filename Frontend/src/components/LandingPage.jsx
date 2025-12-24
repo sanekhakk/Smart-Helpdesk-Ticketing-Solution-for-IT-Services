@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, Bot, Shield, Zap, CheckCircle2, User, Sparkles, Printer } from 'lucide-react';
-
+import BgVideo from '../assets/AI_Ticketing_Helpdesk_Background_Video.mp4';
+import { useNavigate, Link } from 'react-router-dom';
 const LandingPage = ({ onEnter }) => {
   const [step, setStep] = useState(0);
-
+  const navigate = useNavigate();
   // Animation cycle for the Support Ticket Simulation
   useEffect(() => {
     const timer = setInterval(() => {
@@ -13,20 +14,48 @@ const LandingPage = ({ onEnter }) => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-100">
+    
+    <div className="relative min-h-screen text-slate-900 font-sans selection:bg-blue-100 overflow-hidden">
+      
+      {/* Background Video Container */}
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute min-w-full min-h-full object-cover opacity-50"
+        >
+          {/* 2. Use the imported BgVideo variable here */}
+          <source src={BgVideo} type="video/mp4" />
+          
+          {/* Fallback image if video fails to load */}
+          <img src="/fallback-image.jpg" className="absolute min-w-full min-h-full object-cover opacity-100" alt="background" />
+        </video>
+        
+      </div>
+
       {/* Navigation */}
       <nav className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
         <div className="flex items-center gap-2 text-2xl font-bold text-slate-900">
-          <div className="bg-blue-600 p-1.5 rounded-lg">
+          <div className="bg-blue-800 p-1.5 rounded-lg">
             <Bot className="text-white" size={24} />
           </div>
-          <span>SmartHelp <span className="text-blue-600">AI</span></span>
+          <span>SmartHelp <span className="text-blue-800">AI</span></span>
         </div>
         <div className="hidden md:flex items-center gap-8 font-medium text-slate-600">
-          <a href="#features" className="hover:text-blue-600 transition-colors">Features</a>
-          <button onClick={onEnter} className="hover:text-blue-600 transition-colors">Login</button>
+          <Link to="/features" className="hover:text-blue-800 transition-colors">Features</Link>
+          {/* UPDATED: Login Button */}
           <button 
-            onClick={onEnter}
+            onClick={() => onEnter('login')} 
+            className="hover:text-blue-800 transition-colors"
+          >
+            Login
+          </button>
+          
+          {/* UPDATED: Sign Up Free Button */}
+          <button 
+            onClick={() => onEnter('signup')}
             className="bg-slate-900 text-white px-6 py-2.5 rounded-full hover:bg-slate-800 transition-all shadow-md"
           >
             Sign Up Free
@@ -38,23 +67,23 @@ const LandingPage = ({ onEnter }) => {
       <header className="relative pt-12 pb-32 overflow-hidden">
         <div className="max-w-7xl mx-auto px-8 grid lg:grid-cols-2 gap-16 items-center">
           <div className="z-10">
-            <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold mb-6">
+            <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-800 px-4 py-2 rounded-full text-sm font-semibold mb-6">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-800"></span>
               </span>
               v2.0: Real-time AI Resolution
             </div>
             <h1 className="text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 mb-6 leading-[1.1]">
-              Support that <span className="text-blue-600 italic">thinks</span> ahead.
+              Support that <span className="text-blue-800 italic">thinks</span> ahead.
             </h1>
-            <p className="text-xl text-slate-600 mb-10 leading-relaxed max-w-lg">
-              The MERN-powered ticketing system that uses AI to categorize, prioritize, and route support requests instantly.
+            <p className="text-xl text-slate-900 font-bold mb-10 leading-relaxed max-w-lg">
+              The AI powered ticketing helpdesk system that categorizes, prioritize, and route support requests instantly.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <button 
-                onClick={onEnter}
-                className="bg-blue-600 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-blue-700 transition-all shadow-xl shadow-blue-200 flex items-center justify-center gap-2 group"
+                onClick={() => onEnter('login')}
+                className="bg-blue-800 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-blue-800 transition-all shadow-xl shadow-blue-200 flex items-center justify-center gap-2 group"
               >
                 Get Started <ArrowRight className="group-hover:translate-x-1 transition-transform" />
               </button>
@@ -109,7 +138,7 @@ const LandingPage = ({ onEnter }) => {
                       <p className="text-blue-100 text-sm">Detected category: <span className="font-bold text-white px-2 py-0.5 bg-orange-500/40 rounded text-[11px]">HARDWARE</span></p>
                       <p className="text-blue-200/70 text-xs mt-2">Routing to the on-site technician queue...</p>
                     </div>
-                    <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-full bg-blue-800 flex items-center justify-center">
                       <Bot size={16} className="text-white" />
                     </div>
                   </div>
@@ -145,6 +174,12 @@ const LandingPage = ({ onEnter }) => {
           </div>
         </div>
       </header>
+      {/* Footer Branding */}
+      <footer className="py-12 border-t border-slate-100 text-center">
+        <p className="text-slate-400 text-xs font-black uppercase tracking-[0.3em]">
+          © 2025 SmartHelpAI • Intelligence in Every Ticket
+        </p>
+      </footer>
     </div>
   );
 };

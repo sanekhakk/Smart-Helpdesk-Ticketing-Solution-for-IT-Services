@@ -3,9 +3,52 @@ const router = express.Router();
 const Ticket = require('../models/Ticket');
 const axios = require('axios');
 
-/* ================= AI CATEGORIZATION ================= */
+/* ================= CATEGORIZATION LOGIC ================= */
 async function categorizeTicket(title, description) {
-  if (process.env.OPENROUTER_API_KEY) {
+  // Combine title and description for keyword matching
+  const searchText = `${title} ${description}`.toLowerCase();
+  
+  let category = 'Other';
+  let priority = 'Medium';
+  let department = 'Help Desk';
+  let reasoning = 'Manual keyword-based classification';
+
+  // 1. MANUAL KEYWORD LOGIC (Runs first to ensure accuracy)
+  
+  // ✅ NETWORK
+  if (searchText.match(/\b(network|internet|wifi|wi-fi|vpn|router|lan|wan|disconnect|no internet|slow internet|connection failed)\b/)) {
+    category = 'Network';
+    department = 'Network Team';
+  }
+  // ✅ SECURITY
+  else if (searchText.match(/\b(virus|malware|hack|phishing|breach|ransomware|suspicious)\b/)) {
+    category = 'Security';
+    department = 'Security Team';
+    priority = 'High';
+  }
+  // ✅ ACCOUNT
+  else if (searchText.match(/\b(login|password|account|locked|access denied|permission)\b/)) {
+    category = 'Account';
+    department = 'Help Desk';
+  }
+  // ✅ SOFTWARE
+  else if (searchText.match(/\b(software|application|app crash|install|update|bug|error code)\b/)) {
+    category = 'Software';
+    department = 'IT Support';
+  }
+  // ✅ HARDWARE
+  else if (searchText.match(/\b(printer|keyboard|mouse|monitor|cpu|laptop|desktop|hardware|physical damage)\b/)) {
+    category = 'Hardware';
+    department = 'IT Support';
+  }
+
+  // Priority boost for urgent keywords
+  if (searchText.match(/\b(down|not working|urgent|critical|unable|failed)\b/)) {
+    priority = 'High';
+  }
+
+  // 2. AI REFINEMENT (Optional: Only runs if category is still 'Other' and key exists)
+  if (category === 'Other' && process.env.OPENROUTER_API_KEY) {
     try {
       const response = await axios.post(
         'https://openrouter.ai/api/v1/chat/completions',
@@ -14,10 +57,9 @@ async function categorizeTicket(title, description) {
           messages: [
             {
               role: 'system',
-              content: `You are an IT support classifier. 
-              Return ONLY valid JSON. 
-              Category MUST be one of: Hardware, Software, Network, Account, Security, Other.
-              Priority MUST be: Low, Medium, High, or Critical.`
+              content: `You are an IT support classifier. Return ONLY valid JSON. 
+                        Category MUST be: Hardware, Software, Network, Account, Security, or Other.
+                        Priority MUST be: Low, Medium, High, or Critical.`
             },
             { role: 'user', content: `Title: ${title}\nDescription: ${description}` }
           ]
@@ -25,69 +67,25 @@ async function categorizeTicket(title, description) {
         {
           headers: {
             'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
-            'HTTP-Referer': 'http://localhost:5173',
-            'X-Title': 'SmartHelp AI',
             'Content-Type': 'application/json'
           }
         }
       );
+      
       const raw = response.data.choices[0].message.content;
       const json = JSON.parse(raw.match(/\{[\s\S]*\}/)[0]);
 
-      // Ensure the category is valid before returning
       const validCategories = ['Hardware', 'Software', 'Network', 'Account', 'Security', 'Other'];
       return {
         category: validCategories.includes(json.category) ? json.category : 'Other',
         priority: json.priority || 'Medium',
         department: json.department || 'Help Desk',
-        confidence: json.confidence || 0.8,
-        reasoning: json.reasoning || 'AI classified'
+        confidence: 0.9,
+        reasoning: 'AI assisted classification'
       };
     } catch (err) {
       console.error('AI Categorization Failed:', err.message);
     }
-  }
-
-  /* ================= FALLBACK (FIXED LOGIC) ================= */
-
-  let category = 'Other';
-  let priority = 'Medium';
-  let department = 'Help Desk';
-
-  // ✅ NETWORK — FIRST
-  if (text.match(/\b(network|internet|wifi|wi-fi|vpn|router|lan|wan|disconnect|no internet|slow internet|connection failed)\b/)) {
-    category = 'Network';
-    department = 'Network Team';
-  }
-
-  // ✅ SECURITY
-  else if (text.match(/\b(virus|malware|hack|phishing|breach|ransomware|suspicious)\b/)) {
-    category = 'Security';
-    department = 'Security Team';
-    priority = 'High';
-  }
-
-  // ✅ ACCOUNT
-  else if (text.match(/\b(login|password|account|locked|access denied|permission)\b/)) {
-    category = 'Account';
-    department = 'Help Desk';
-  }
-
-  // ✅ SOFTWARE
-  else if (text.match(/\b(software|application|app crash|install|update|bug|error code)\b/)) {
-    category = 'Software';
-    department = 'IT Support';
-  }
-
-  // ✅ HARDWARE — LAST
-  else if (text.match(/\b(printer|keyboard|mouse|monitor|cpu|laptop|desktop|hardware|physical damage)\b/)) {
-    category = 'Hardware';
-    department = 'IT Support';
-  }
-
-  // Priority boost
-  if (text.match(/\b(down|not working|urgent|critical|unable|failed)\b/)) {
-    priority = 'High';
   }
 
   return {
@@ -95,18 +93,21 @@ async function categorizeTicket(title, description) {
     priority,
     department,
     confidence: 0.85,
-    reasoning: 'Fallback keyword-based classification'
+    reasoning
   };
 }
+
 
 /* ================= CREATE TICKET ================= */
 router.post('/create', async (req, res) => {
   try {
-    const { title, description } = req.body;
+    // Expect userId to be sent from the frontend now
+    const { title, description, userId } = req.body; 
 
     const ai = await categorizeTicket(title, description);
 
     const ticket = new Ticket({
+      user: userId, // Save the ID of the logged-in user
       title,
       description,
       category: ai.category,
@@ -219,23 +220,45 @@ router.patch('/:id/escalate', async (req, res) => {
 });
 
 router.patch('/:id/close', async (req, res) => {
-  const ticket = await Ticket.findByIdAndUpdate(
-    req.params.id,
-    { status: 'Closed', 'sla.resolvedAt': new Date() },
-    { new: true }
-  );
-  res.json(ticket);
+  try {
+    const { adminFeedback } = req.body; // Capture the feedback from the request body
+    const ticket = await Ticket.findByIdAndUpdate(
+      req.params.id,
+      { 
+        status: 'Closed', 
+        'sla.resolvedAt': new Date(),
+        aiReasoning: adminFeedback // We can store admin feedback in aiReasoning or a new field
+      },
+      { new: true }
+    );
+    res.json(ticket);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to close ticket' });
+  }
 });
 
 /* ================= FETCH ================= */
 router.get('/', async (req, res) => {
-  const tickets = await Ticket.find().sort({ createdAt: -1 });
-  res.json(tickets);
+  // In a production app, you'd add middleware here to check if user.role === 'admin'
+  try {
+    const tickets = await Ticket.find().sort({ createdAt: -1 });
+    res.json(tickets);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch all tickets" });
+  }
 });
 
-router.get('/:id', async (req, res) => {
-  const ticket = await Ticket.findById(req.params.id);
-  res.json(ticket);
+/* ================= FETCH USER TICKETS ================= */
+router.get('/user/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    // Find only tickets where the 'user' field matches the ID from the URL
+    const tickets = await Ticket.find({ user: userId }).sort({ createdAt: -1 });
+    res.json(tickets);
+  } catch (err) {
+    console.error("Error fetching user tickets:", err);
+    res.status(500).json({ error: 'Failed to fetch tickets' });
+  }
 });
 
 router.delete('/:id', async (req, res) => {
