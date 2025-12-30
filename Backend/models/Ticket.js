@@ -1,4 +1,3 @@
-// models/Ticket.js
 const mongoose = require('mongoose');
 
 const TicketSchema = new mongoose.Schema({
@@ -11,7 +10,6 @@ const TicketSchema = new mongoose.Schema({
   description: String,
   category: {
     type: String,
-    // Expanded enum to be more flexible or map 'Printers' to 'Hardware'
     enum: ['Hardware', 'Software', 'Network', 'Account', 'Security', 'Other'],
     default: 'Other'
   },
@@ -50,7 +48,6 @@ const TicketSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now }
 });
 
-// Fix: Removed 'next' to avoid TypeError
 TicketSchema.pre('save', function() {
   this.updatedAt = Date.now();
 });

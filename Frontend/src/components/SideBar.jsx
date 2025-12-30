@@ -8,8 +8,8 @@ import {
   HelpCircle,
   LogOut,
   ShieldCheck,
-  UserCircle, // Required for Admin User Management
-  History     // Required for Admin Ticket History
+  UserCircle, 
+  History    
 } from 'lucide-react';
 
 const Sidebar = ({ activeTab, setActiveTab, onLogout, user }) => {
@@ -26,9 +26,9 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, user }) => {
           </span>
         </div>
 
-        {/* Main Navigation */}
+       
         <nav className="space-y-2">
-          {/* Universal Home Tab */}
+         
           <button
             onClick={() => setActiveTab('home')}
             className={`w-full flex items-center gap-3 p-3.5 rounded-xl font-semibold transition-all ${
@@ -40,7 +40,7 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, user }) => {
             <HomeIcon size={20} /> Home
           </button>
 
-          {/* ADMIN ONLY MENUS: Visible only if user role is 'admin' */}
+        
           {user?.role === 'admin' && (
             <>
               <div className="pt-4 pb-2 px-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
@@ -70,7 +70,7 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, user }) => {
             </>
           )}
 
-          {/* USER ONLY MENUS: Visible only for non-admin users */}
+        
           {user?.role !== 'admin' && (
             <>
             <button
@@ -113,7 +113,7 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, user }) => {
         </nav>
       </div>
 
-      {/* Logout Footer */}
+    
       <div className="mt-auto p-8 border-t border-slate-900">
         <button
           onClick={onLogout}

@@ -10,8 +10,7 @@ export default function AuthPage({ onLoginSuccess }) {
   const [isSignup, setIsSignup] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  
-  // Form States
+ 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -45,23 +44,22 @@ export default function AuthPage({ onLoginSuccess }) {
  const handleSimpleLogin = async (e) => {
   e.preventDefault();
   try {
-    // 1. Declare 'response' inside the try block
+
     const response = await axios.post('http://localhost:5000/api/auth/login', {
       email,
       password
     });
 
     if (response.data.token) {
-      // 2. Store both token and user object for persistence
+      
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user)); 
       
-      // 3. Pass the user object to the global state
       onLoginSuccess(response.data.user); 
       navigate("/dashboard");
     }
   } catch (err) {
-    // 4. IMPORTANT: In the catch block, use 'err.response', NOT 'response'
+   
     console.error("Login error:", err);
     alert("Login failed: " + (err.response?.data?.message || "Invalid credentials"));
   }
@@ -78,17 +76,16 @@ export default function AuthPage({ onLoginSuccess }) {
                 playsInline
                 className="absolute min-w-full min-h-full object-cover opacity-50"
               >
-                {/* 2. Use the imported BgVideo variable here */}
+               
                 <source src={BgVideo} type="video/mp4" />
                 
-                {/* Fallback image if video fails to load */}
                 <img src="/fallback-image.jpg" className="absolute min-w-full min-h-full object-cover opacity-100" alt="background" />
               </video>
               
             </div>
       <div className="w-full max-w-[900px] h-[550px] bg-white rounded-3xl shadow-2xl grid grid-cols-1 md:grid-cols-2 overflow-hidden">
         
-        {/* LEFT PANEL: Branding */}
+       
         <div className="bg-gradient-to-br from-slate-800 to-slate-900 text-white flex flex-col justify-center items-center px-10 text-center">
          
            <div className="flex items-center gap-3 text-2xl font-bold tracking-tight mb-12">
@@ -107,10 +104,10 @@ export default function AuthPage({ onLoginSuccess }) {
           </p>
         </div>
 
-        {/* RIGHT PANEL: Form Area */}
+       
         <div className="relative flex items-center justify-center p-8 bg-white">
           
-          {/* LOGIN FORM */}
+         
           <div
             className={`w-full max-w-sm transition-all duration-500 absolute
             ${isSignup
@@ -174,7 +171,7 @@ export default function AuthPage({ onLoginSuccess }) {
             </p>
           </div>
 
-          {/* SIGNUP FORM */}
+      
           <div
               className={`w-full max-w-sm transition-all duration-500 absolute
               ${isSignup

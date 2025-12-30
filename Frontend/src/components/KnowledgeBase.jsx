@@ -40,17 +40,15 @@ const KnowledgeBase = ({ onOpenTicket }) => {
               playsInline
               className="absolute min-w-full min-h-full object-cover opacity-70"
             >
-              {/* 2. Use the imported BgVideo variable here */}
+            
               <source src={BgVideo} type="video/mp4" />
-              
-              {/* Fallback image if video fails to load */}
+            
               <img src="/fallback-image.jpg" className="absolute min-w-full min-h-full object-cover opacity-100" alt="background" />
             </video>
             
           </div>
     <div className="flex-1  overflow-y-auto">
-        
-      {/* HERO SEARCH SECTION */}
+     
       <section className="bg-slate-50 border-b border-slate-100 py-16 px-10">
         <div className="max-w-4xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 text-xs font-bold tracking-widest uppercase text-blue-800 bg-blue-50 rounded-lg border border-blue-100">
@@ -73,7 +71,6 @@ const KnowledgeBase = ({ onOpenTicket }) => {
         </div>
       </section>
 
-      {/* CATEGORY NAV */}
       <div className="max-w-7xl mx-auto px-10 py-8">
         <div className="flex flex-wrap gap-3 justify-center mb-12">
           {categories.map((cat) => {
@@ -95,7 +92,6 @@ const KnowledgeBase = ({ onOpenTicket }) => {
           })}
         </div>
 
-        {/* ARTICLES GRID */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredArticles.map((article) => (
             <div 
@@ -131,7 +127,6 @@ const KnowledgeBase = ({ onOpenTicket }) => {
         )}
       </div>
 
-      {/* FOOTER CTA */}
       <div className="max-w-7xl mx-auto px-10 pb-20">
         <div className="bg-slate-900 rounded-[2.5rem] p-12 text-center text-white relative overflow-hidden">
           <div className="relative z-10">
@@ -143,13 +138,13 @@ const KnowledgeBase = ({ onOpenTicket }) => {
               Open a Support Ticket
             </button>
           </div>
-          {/* Decorative shapes */}
+          
           <div className="absolute top-0 right-0 w-64 h-64 bg-blue-800/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-800/10 rounded-full blur-3xl -ml-32 -mb-32"></div>
         </div>
       </div>
 
-       {/* FOOTER */}
+      
       <footer className="bg-white py-12 border-t border-slate-100 text-center">
         <p className="text-slate-400 text-xs font-black uppercase tracking-[0.3em]">
           © 2025 SmartHelpAI • Intelligence in Every Ticket

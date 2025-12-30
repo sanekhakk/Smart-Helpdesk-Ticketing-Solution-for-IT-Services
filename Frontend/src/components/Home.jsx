@@ -7,12 +7,12 @@ import {
 import BgVideo from '../assets/AI_Ticketing_Helpdesk_Background_Video.mp4';
 
 const Home = ({ username = "Support User", onStartTicket, user , stats}) => {
-  // Identify if the logged-in user has administrative privileges
+
   const isAdmin = user?.role === 'admin';
 
   return (
     <div className="relative flex-1 h-full overflow-y-auto overflow-x-hidden flex flex-col">
-      {/* Background Video Layer */}
+ 
       <div className="absolute inset-0 h-[600px] overflow-hidden opacity-70 pointer-events-none">
         <video autoPlay loop muted playsInline className="absolute min-w-full min-h-full object-cover">
           <source src={BgVideo} type="video/mp4" />
@@ -22,7 +22,7 @@ const Home = ({ username = "Support User", onStartTicket, user , stats}) => {
 
       <div className="relative z-10 flex-1 flex flex-col pt-20 pb-12 px-8 lg:px-24">
         <div className="max-w-5xl animate-in fade-in slide-in-from-bottom-8 duration-700">
-          {/* Status Badge: Admin specific messaging */}
+        
           <div className="inline-flex items-center gap-2 bg-blue-600/10 backdrop-blur-md border border-blue-200 px-4 py-2 rounded-full text-blue-800 text-xs font-black mb-8">
             <Activity size={14} className="animate-pulse" />
             <span className="uppercase tracking-[0.2em]">
@@ -30,7 +30,7 @@ const Home = ({ username = "Support User", onStartTicket, user , stats}) => {
             </span>
           </div>
 
-          {/* Greeting: Admin-specific heading */}
+          
           <h1 className="text-6xl lg:text-6xl font-black text-slate-900 mb-6 tracking-tighter leading-none">
             {isAdmin ? "System Control," : "Welcome back,"}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-800 to-indigo-600 ml-3">
@@ -38,14 +38,14 @@ const Home = ({ username = "Support User", onStartTicket, user , stats}) => {
             </span>
           </h1>
           
-          {/* Description: Tailored for administrative oversight */}
+         
           <p className="text-xl font-medium text-slate-600 mb-10 leading-relaxed max-w-2xl">
             {isAdmin 
               ? "Global infrastructure monitoring and ticket escalation management. Oversee AI performance and human intervention queues."
               : "Experience the future of IT support. Our Gemini-powered AI classifies your issues in milliseconds and provides instant resolutions."}
           </p>
 
-          {/* Conditional Action Buttons: Hide ticket creation for admins */}
+       
           {!isAdmin && (
             <div className="flex flex-wrap gap-4 mb-16">
               <button 
@@ -58,7 +58,6 @@ const Home = ({ username = "Support User", onStartTicket, user , stats}) => {
           )}
         </div>
 
-        {/* Admin Dashboard Stats: Displays oversight metrics instead of personal ticket status */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
           {(isAdmin ? [
             { label: "Pending Escalations", val: "05", color: "text-rose-600", icon: AlertTriangle },
@@ -81,7 +80,6 @@ const Home = ({ username = "Support User", onStartTicket, user , stats}) => {
           ))}
         </div>
 
-        {/* Infrastructure Nodes: Only visible to admins to monitor system components */}
         {isAdmin && (
           <div className="mb-16">
             <h3 className="text-xs font-black text-slate-400 uppercase tracking-[0.3em] mb-8 text-center">
@@ -124,7 +122,7 @@ const Home = ({ username = "Support User", onStartTicket, user , stats}) => {
           </div>
         )}
 
-        {/* AI Performance Card */}
+    
         <div className="bg-slate-900 rounded-[3rem] p-12 text-white relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 mb-12">
           <div className="relative z-10 max-w-xl">
             <div className="flex items-center gap-2 text-blue-400 font-bold text-xs uppercase tracking-widest mb-4">

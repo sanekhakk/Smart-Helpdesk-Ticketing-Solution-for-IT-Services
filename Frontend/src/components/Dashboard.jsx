@@ -176,14 +176,14 @@ const Dashboard = ({ onLogout,user }) => {
       <main className="flex-1 flex flex-col overflow-hidden">
         {activeTab === 'home' ? (
           user?.role === 'admin' ? (
-          <AdminHome username={user?.name} stats={adminStats}/> // Uses new Admin component
+          <AdminHome username={user?.name} stats={adminStats}/> 
         ) : (
       <Home 
         username={user?.name || "Support User"} 
         onStartTicket={openNewTicket} 
         user={user}
         stats={userStats}
-      /> // Uses original User component
+      /> 
     )
   ): activeTab === 'admin' ? (
           <AdminPanel tickets={tickets} onRefresh={fetchTickets} />
@@ -191,11 +191,11 @@ const Dashboard = ({ onLogout,user }) => {
           <UserManagement users={users} onRefresh={fetchUsers} />
         ) : activeTab === 'history' ? (
           <TicketHistory tickets={tickets} />
-        ) : activeTab === 'help' ? ( // Add this condition
+        ) : activeTab === 'help' ? ( 
           <div className="overflow-y-auto h-full">
             <Help user={user} onOpenTicket={openNewTicket}/> 
           </div>
-        ) : activeTab === 'kb' ? ( // LINK THE KB TAB HERE
+        ) : activeTab === 'kb' ? ( 
          <KnowledgeBase onOpenTicket={() => setActiveTab('dashboard')} />
         ): activeTab === 'dashboard' ? (
           <>
@@ -213,7 +213,7 @@ const Dashboard = ({ onLogout,user }) => {
               </button>
             </div>
 
-            {/* SEARCH + FILTER */}
+            
             <div className="bg-white/60 backdrop-blur-sm px-10 py-4 border-b border-slate-200/60 flex gap-3 shrink-0">
               <div className="relative flex-1 max-w-md">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
@@ -239,7 +239,6 @@ const Dashboard = ({ onLogout,user }) => {
               </div>
             </div>
 
-            {/* TABLE SECTION */}
             <div className="flex-1 p-10 overflow-y-auto">
               <div className="bg-white rounded-2xl shadow-xl border border-slate-200/60 overflow-visible">
                 <table className="w-full">
@@ -319,7 +318,7 @@ const Dashboard = ({ onLogout,user }) => {
                               </button>
                             </div>
 
-                            {/* DROPDOWN MENU */}
+                            
                             {openMenuId === ticket._id && (
                               <div
                                 ref={(el) => (menuRef.current[ticket._id] = el)}
@@ -364,7 +363,7 @@ const Dashboard = ({ onLogout,user }) => {
         )}
       </main>
 
-      {/* MODALS */}
+      
       <TicketModal
         isOpen={isModalOpen}
         ticket={selectedTicket}

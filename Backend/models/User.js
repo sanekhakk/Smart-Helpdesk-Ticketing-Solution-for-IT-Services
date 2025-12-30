@@ -18,7 +18,7 @@ const UserSchema = new mongoose.Schema({
   role: {
     type: String,
     enum: ['user', 'admin'],
-    default: 'user' // Default role is a standard user
+    default: 'user'
   },
   createdAt: {
     type: Date,
@@ -26,7 +26,6 @@ const UserSchema = new mongoose.Schema({
   }
 });
 
-/* ✅ PRE-SAVE HOOK */
 UserSchema.pre('save', async function () {
   if (!this.isModified('password')) return;
   const salt = await bcrypt.genSalt(10);

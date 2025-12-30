@@ -12,7 +12,7 @@ export default function VerifyOtp({ onLoginSuccess }) {
   const navigate = useNavigate();
   const inputRefs = useRef([]);
 
-  // Timer Logic
+  
   useEffect(() => {
     let interval = setInterval(() => {
       setTimer((prev) => (prev > 0 ? prev - 1 : 0));
@@ -25,7 +25,7 @@ export default function VerifyOtp({ onLoginSuccess }) {
 
     setOtp([...otp.map((d, idx) => (idx === index ? element.value : d))]);
 
-    // Focus next input
+  
     if (element.value !== "" && index < 5) {
       inputRefs.current[index + 1].focus();
     }
@@ -73,10 +73,10 @@ export default function VerifyOtp({ onLoginSuccess }) {
                     playsInline
                     className="absolute min-w-full min-h-full object-cover opacity-50"
                   >
-                    {/* 2. Use the imported BgVideo variable here */}
+                    
                     <source src={BgVideo} type="video/mp4" />
                     
-                    {/* Fallback image if video fails to load */}
+                    
                     <img src="/fallback-image.jpg" className="absolute min-w-full min-h-full object-cover opacity-100" alt="background" />
                   </video>
                   
@@ -85,7 +85,7 @@ export default function VerifyOtp({ onLoginSuccess }) {
       
       <div className="w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl p-10 text-center border border-slate-200">
         
-        {/* Header Icon */}
+        
         <div className="flex justify-center mb-6">
           <div className="bg-slate-900 p-4 rounded-2xl shadow-lg shadow-slate-200">
             <ShieldCheck className="text-white" size={32} />
@@ -98,7 +98,7 @@ export default function VerifyOtp({ onLoginSuccess }) {
           <span className="font-bold text-slate-800">{state?.email}</span>
         </p>
 
-        {/* Segmented OTP Input */}
+  
         <div className="flex gap-2 justify-center mb-8">
           {otp.map((data, index) => (
             <input
@@ -114,7 +114,7 @@ export default function VerifyOtp({ onLoginSuccess }) {
           ))}
         </div>
 
-        {/* Verify Button */}
+     
         <button
           onClick={verifyOtp}
           disabled={isLoading || otp.join("").length < 6}
@@ -123,7 +123,6 @@ export default function VerifyOtp({ onLoginSuccess }) {
           {isLoading ? <RefreshCw className="animate-spin" size={20} /> : "Verify & Register"}
         </button>
 
-        {/* Footer actions */}
         <div className="space-y-4">
           <p className="text-sm text-slate-500">
             Didn't receive code?{" "}

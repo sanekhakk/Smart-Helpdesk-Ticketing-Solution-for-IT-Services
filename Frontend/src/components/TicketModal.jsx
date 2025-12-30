@@ -60,13 +60,13 @@ const TicketModal = ({ isOpen, ticket, onClose, onTicketUpdated, user  }) => {
 
     try {
       const res = await axios.post('http://localhost:5000/api/tickets/create', { title, description, userId: user?.id });
-      // Crucial: Set the ticket data from the response so the ID and Status are available
+      
       setTicketData(res.data);
       
       const solutionMessage = {
         role: 'assistant',
         content: res.data.aiSuggestion,
-        metadata: res.data // Contains category, priority, etc.
+        metadata: res.data 
       };
       
       setMessages([userIssueMessage, solutionMessage]);
@@ -92,7 +92,7 @@ const TicketModal = ({ isOpen, ticket, onClose, onTicketUpdated, user  }) => {
       const res = await axios.post('http://localhost:5000/api/tickets/chat', {
         messages: updatedMessages,
         category: ticketData?.category || 'General',
-        ticketId: ticketData?._id || ticketData?.id // Handle both formats
+        ticketId: ticketData?._id || ticketData?.id 
       });
       setMessages(prev => [...prev, { role: 'assistant', content: res.data.content }]);
     } catch (error) {
@@ -108,7 +108,7 @@ const TicketModal = ({ isOpen, ticket, onClose, onTicketUpdated, user  }) => {
     try {
       await axios.patch(`http://localhost:5000/api/tickets/${id}/escalate`);
       setMessages(prev => [...prev, { role: 'assistant', content: '✅ Escalated to a human agent.' }]);
-      // Update local state to show escalation status
+     
       setTicketData(prev => ({ ...prev, status: 'Escalated' }));
       if (onTicketUpdated) onTicketUpdated();
     } catch (err) { console.error(err); }
@@ -122,7 +122,7 @@ const TicketModal = ({ isOpen, ticket, onClose, onTicketUpdated, user  }) => {
     }
     
     try {
-      // Note: Endpoint matches your ticketRoutes.js
+     
       await axios.patch(`http://localhost:5000/api/tickets/${id}/close`, {
           adminFeedback: "Resolved by user via AI Chat"
       });
@@ -191,7 +191,7 @@ const TicketModal = ({ isOpen, ticket, onClose, onTicketUpdated, user  }) => {
                 <button type="submit" className="bg-blue-800 p-3 rounded-xl"><Send size={20} className="text-white"/></button>
               </form>
               
-              {/* Check status case-insensitively and ensure ticketData._id exists */}
+              
               {ticketData && ticketData.status?.toLowerCase() !== 'closed' && (
                 <div className="flex gap-2 mt-3">
                   <button onClick={resolveTicket} className="text-xs px-3 py-1.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-all font-bold">

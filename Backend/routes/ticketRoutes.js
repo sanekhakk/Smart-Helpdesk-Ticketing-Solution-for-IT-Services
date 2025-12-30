@@ -3,9 +3,9 @@ const router = express.Router();
 const Ticket = require('../models/Ticket');
 const axios = require('axios');
 
-/* ================= CATEGORIZATION LOGIC ================= */
+
 async function categorizeTicket(title, description) {
-  // Combine title and description for keyword matching
+
   const searchText = `${title} ${description}`.toLowerCase();
   
   let category = 'Other';
@@ -13,41 +13,37 @@ async function categorizeTicket(title, description) {
   let department = 'Help Desk';
   let reasoning = 'Manual keyword-based classification';
 
-  // 1. MANUAL KEYWORD LOGIC (Runs first to ensure accuracy)
-  
-  // ✅ NETWORK
+
   if (searchText.match(/\b(network|internet|wifi|wi-fi|vpn|router|lan|wan|disconnect|no internet|slow internet|connection failed)\b/)) {
     category = 'Network';
     department = 'Network Team';
   }
-  // ✅ SECURITY
-  else if (searchText.match(/\b(virus|malware|hack|phishing|breach|ransomware|suspicious)\b/)) {
+ 
+  else if (searchText.match(/\b(security|virus|malware|hack|phishing|breach|ransomware|suspicious)\b/)) {
     category = 'Security';
     department = 'Security Team';
     priority = 'High';
   }
-  // ✅ ACCOUNT
+ 
   else if (searchText.match(/\b(login|password|account|locked|access denied|permission)\b/)) {
     category = 'Account';
     department = 'Help Desk';
   }
-  // ✅ SOFTWARE
-  else if (searchText.match(/\b(software|application|app crash|install|update|bug|error code)\b/)) {
+ 
+  else if (searchText.match(/\b(lag|hanging|software|application|app crash|install|update|bug|error code)\b/)) {
     category = 'Software';
     department = 'IT Support';
   }
-  // ✅ HARDWARE
-  else if (searchText.match(/\b(printer|keyboard|mouse|monitor|cpu|laptop|desktop|hardware|physical damage)\b/)) {
+ 
+  else if (searchText.match(/\b(touch|printer|keyboard|mouse|monitor|cpu|laptop|desktop|hardware|physical damage)\b/)) {
     category = 'Hardware';
     department = 'IT Support';
   }
 
-  // Priority boost for urgent keywords
   if (searchText.match(/\b(down|not working|urgent|critical|unable|failed)\b/)) {
     priority = 'High';
   }
 
-  // 2. AI REFINEMENT (Optional: Only runs if category is still 'Other' and key exists)
   if (category === 'Other' && process.env.OPENROUTER_API_KEY) {
     try {
       const response = await axios.post(
@@ -98,16 +94,15 @@ async function categorizeTicket(title, description) {
 }
 
 
-/* ================= CREATE TICKET ================= */
 router.post('/create', async (req, res) => {
   try {
-    // Expect userId to be sent from the frontend now
+   
     const { title, description, userId } = req.body; 
 
     const ai = await categorizeTicket(title, description);
 
     const ticket = new Ticket({
-      user: userId, // Save the ID of the logged-in user
+      user: userId, 
       title,
       description,
       category: ai.category,
@@ -139,7 +134,7 @@ router.post('/create', async (req, res) => {
   }
 });
 
-/* ================= AI SOLUTION ================= */
+
 async function generateInitialResponse(ticket) {
   if (!process.env.OPENROUTER_API_KEY) {
     return `I've categorized this as ${ticket.category}. Please wait for a human agent.`;
@@ -165,12 +160,12 @@ async function generateInitialResponse(ticket) {
           'Content-Type': 'application/json' } ,timeout: 15000}
     );
     return response.data.choices[0].message.content;
-  } catch (err) { // Fixed: added 'err' here
+  } catch (err) { 
     console.error('AI Response Failed:', err.message);
     return `Categorized as ${ticket.category}. Agent will assist soon.`;
   }
 }
-/* ================= CHAT ================= */
+
 router.post('/chat', async (req, res) => {
   try {
     const { messages, category, ticketId } = req.body;
@@ -209,7 +204,6 @@ router.post('/chat', async (req, res) => {
   }
 });
 
-/* ================= STATUS ACTIONS ================= */
 router.patch('/:id/escalate', async (req, res) => {
   const ticket = await Ticket.findByIdAndUpdate(
     req.params.id,
@@ -221,13 +215,13 @@ router.patch('/:id/escalate', async (req, res) => {
 
 router.patch('/:id/close', async (req, res) => {
   try {
-    const { adminFeedback } = req.body; // Capture the feedback from the request body
+    const { adminFeedback } = req.body; 
     const ticket = await Ticket.findByIdAndUpdate(
       req.params.id,
       { 
         status: 'Closed', 
         'sla.resolvedAt': new Date(),
-        aiReasoning: adminFeedback // We can store admin feedback in aiReasoning or a new field
+        aiReasoning: adminFeedback 
       },
       { new: true }
     );
@@ -237,9 +231,9 @@ router.patch('/:id/close', async (req, res) => {
   }
 });
 
-/* ================= FETCH ================= */
+
 router.get('/', async (req, res) => {
-  // In a production app, you'd add middleware here to check if user.role === 'admin'
+  
   try {
     const tickets = await Ticket.find().sort({ createdAt: -1 });
     res.json(tickets);
@@ -248,11 +242,11 @@ router.get('/', async (req, res) => {
   }
 });
 
-/* ================= FETCH USER TICKETS ================= */
+
 router.get('/user/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
-    // Find only tickets where the 'user' field matches the ID from the URL
+    
     const tickets = await Ticket.find({ user: userId }).sort({ createdAt: -1 });
     res.json(tickets);
   } catch (err) {

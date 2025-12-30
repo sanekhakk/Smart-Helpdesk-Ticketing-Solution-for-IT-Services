@@ -7,16 +7,15 @@ import VerifyOtp from './components/VerifyOtp.jsx';
 import { AppWindow } from 'lucide-react';
 import Features from './components/Features.jsx';
 
-// src/App.jsx
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null); // New state to hold user info
+  const [user, setUser] = useState(null); 
   const navigate = useNavigate();
 
 
-  // Function to handle landing page redirection
+ 
   const handleLandingEnter = (mode) => {
-    // Navigate to auth and pass the desired mode (login or signup) via state
+   
     navigate("/auth", { state: { initialMode: mode } });
   };
 
@@ -30,7 +29,7 @@ function App() {
 
   const handleLogin = (userData) => {
     setIsAuthenticated(true);
-    setUser(userData); // Store the user object (id, name, email)
+    setUser(userData); 
   };
   useEffect(() => {
   const token = localStorage.getItem("token");
@@ -58,7 +57,7 @@ function App() {
           path="/dashboard"
           element={
             isAuthenticated ? (
-              <Dashboard onLogout={handleLogout} user={user} /> // Pass user to Dashboard
+              <Dashboard onLogout={handleLogout} user={user} />
             ) : (
               <Navigate to="/auth" />
             )

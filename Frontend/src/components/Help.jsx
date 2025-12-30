@@ -9,7 +9,7 @@ import BgVideo from '../assets/AI_Ticketing_Helpdesk_Background_Video.mp4';
 export default function Help({ user, onOpenTicket }) {
   return (
     <div className=" text-slate-900 min-h-screen font-sans relative overflow-y-auto">
-        {/* Background Video Container */}
+   
                       <div className="absolute inset-0 -z-10 overflow-hidden">
                         <video
                           autoPlay
@@ -18,10 +18,10 @@ export default function Help({ user, onOpenTicket }) {
                           playsInline
                           className="absolute min-w-full min-h-full object-cover opacity-80"
                         >
-                          {/* 2. Use the imported BgVideo variable here */}
+                        
                           <source src={BgVideo} type="video/mp4" />
                           
-                          {/* Fallback image if video fails to load */}
+                      
                           <img src="/fallback-image.jpg" className="absolute min-w-full min-h-full object-cover opacity-100" alt="background" />
                         </video>
                         
@@ -35,7 +35,6 @@ export default function Help({ user, onOpenTicket }) {
         `}
       </style>
 
-      {/* HERO SECTION */}
       <section className=" border-b border-slate-100 pt-16 pb-24">
         <div className="max-w-7xl mx-auto px-10">
           <div className="animate-fade-up text-center max-w-3xl mx-auto">
@@ -52,11 +51,10 @@ export default function Help({ user, onOpenTicket }) {
         </div>
       </section>
 
-      {/* MAIN CONTENT GRID */}
       <div className="max-w-7xl mx-auto px-10 -mt-16 pb-20">
         <div className="grid lg:grid-cols-3 gap-8">
           
-          {/* LEFT: LIVE SYSTEM INTEGRITY */}
+        
           <div className="lg:col-span-1 space-y-6 animate-fade-up" style={{ animationDelay: '0.1s' }}>
             <div className="infra-card p-8 rounded-[2.5rem] relative overflow-hidden group h-full">
               <h3 className="font-bold text-slate-800 text-lg mb-6 flex items-center gap-2">
@@ -87,10 +85,9 @@ export default function Help({ user, onOpenTicket }) {
             </div>
           </div>
 
-          {/* RIGHT: SMART RESOLUTION ACTIONS */}
           <div className="lg:col-span-2 space-y-6 animate-fade-up" style={{ animationDelay: '0.2s' }}>
             <div className="grid md:grid-cols-2 gap-6">
-              {/* CONTACT CHANNELS */}
+           
               <div className="infra-card p-8 rounded-[2.5rem] flex flex-col justify-between">
                 <div>
                   <h3 className="font-bold text-slate-900 text-xl mb-4">Direct Contact</h3>
@@ -111,7 +108,6 @@ export default function Help({ user, onOpenTicket }) {
                 </div>
               </div>
 
-              {/* AI CHAT TRIGGER */}
               <div className="bg-slate-900 p-8 rounded-[2.5rem] text-white flex flex-col justify-between group cursor-pointer" onClick={onOpenTicket}>
                 <div>
                   <div className="bg-blue-600 w-12 h-12 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
@@ -128,7 +124,6 @@ export default function Help({ user, onOpenTicket }) {
               </div>
             </div>
 
-            {/* QUICK INFRASTRUCTURE STATUS CARDS */}
             <div className="grid grid-cols-3 gap-4">
               {[
                 { label: "Network", icon: Globe, status: "Stable" },
@@ -145,7 +140,6 @@ export default function Help({ user, onOpenTicket }) {
           </div>
         </div>
       </div>
-      {/* MAP SECTION */}
       <div className="relative w-full h-[500px] bg-slate-200 overflow-hidden">
         <iframe
           title="LPU Map"
@@ -159,7 +153,7 @@ export default function Help({ user, onOpenTicket }) {
         </div>
       </div>
 
-      {/* FOOTER */}
+   
       <footer className="bg-white py-12 border-t border-slate-100 text-center">
         <p className="text-slate-400 text-xs font-black uppercase tracking-[0.3em]">
           © 2025 SmartHelpAI • Intelligence in Every Ticket

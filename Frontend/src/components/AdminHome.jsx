@@ -7,7 +7,6 @@ import {
 const AdminHome = ({ username, stats }) => {
   return (
     <div className="p-10 flex-1 overflow-y-auto bg-slate-50">
-      {/* Header Section */}
       <div className="mb-10">
         <div className="inline-flex items-center gap-2 bg-blue-600/10 border border-blue-200 px-4 py-2 rounded-full text-blue-800 text-xs font-black mb-6">
           <ShieldCheck size={14} className="animate-pulse" />
@@ -22,7 +21,6 @@ const AdminHome = ({ username, stats }) => {
         </p>
       </div>
 
-      {/* Real Data Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
         {[
           { 
@@ -55,7 +53,7 @@ const AdminHome = ({ username, stats }) => {
               <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">{stat.label}</p>
               <stat.icon size={20} className={stat.color} />
             </div>
-            {/* Format numbers to always show two digits if under 10 (e.g., 05) */}
+   
             <p className={`text-4xl font-black ${stat.color}`}>
               {typeof stat.val === 'number' && stat.val < 10 ? `0${stat.val}` : stat.val}
             </p>
@@ -63,7 +61,6 @@ const AdminHome = ({ username, stats }) => {
         ))}
       </div>
 
-      {/* Infrastructure Nodes Section */}
       <div className="mb-10">
         <h3 className="text-xs font-black text-slate-400 uppercase tracking-[0.3em] mb-8">Node Infrastructure Health</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -86,7 +83,7 @@ const AdminHome = ({ username, stats }) => {
         </div>
       </div>
 
-      {/* AI Engine Status Card */}
+  
       <div className="bg-slate-900 rounded-[3rem] p-12 text-white relative overflow-hidden">
         <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="max-w-xl text-center md:text-left">
