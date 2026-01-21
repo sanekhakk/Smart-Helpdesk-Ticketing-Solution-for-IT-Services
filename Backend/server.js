@@ -8,7 +8,9 @@ const ticketRoutes = require('./routes/ticketRoutes');
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: "*", // later you can restrict to Vercel URL
+}));
 app.use(express.json());
 
 app.use('/api/auth', authRoutes); 
