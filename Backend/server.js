@@ -8,9 +8,16 @@ const ticketRoutes = require('./routes/ticketRoutes');
 
 const app = express();
 
-app.use(cors({
-  origin: "https://smart-helpdesk-ticketing-solution-f.vercel.app/", 
-}));
+app.use(
+  cors({
+    origin: [
+      'http://localhost:5173',
+      'https://smart-helpdesk-ticketing-solution-f.vercel.app'
+    ],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    credentials: true
+  })
+);
 app.use(express.json());
 
 app.use('/api/auth', authRoutes); 
