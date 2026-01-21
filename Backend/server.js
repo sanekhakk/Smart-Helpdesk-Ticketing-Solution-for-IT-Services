@@ -9,7 +9,7 @@ const ticketRoutes = require('./routes/ticketRoutes');
 const app = express();
 
 app.use(cors({
-  origin: "*", // later you can restrict to Vercel URL
+  origin: "https://smart-helpdesk-ticketing-solution-f.vercel.app/", 
 }));
 app.use(express.json());
 
