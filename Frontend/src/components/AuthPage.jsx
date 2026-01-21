@@ -6,7 +6,7 @@ import axios from "axios";
 import BgVideo from '../assets/AI_Ticketing_Helpdesk_Background_Video.mp4';
 
 export default function AuthPage({ onLoginSuccess }) {
-
+  const API_BASE_URL = import.meta.env.VITE_API_URL;
   const [isSignup, setIsSignup] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -26,10 +26,10 @@ export default function AuthPage({ onLoginSuccess }) {
   const otp = Math.floor(100000 + Math.random() * 900000);
 
   emailjs.send(
-    "service_kj0fd1i",
-    "template_mcx12r6",
+    import.meta.env.VITE_EMAILJS_SERVICE_ID,
+    import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
     { to_email: email, otp },
-    "ty-EzVNdhr8VqKTAC"
+    import.meta.env.VITE_EMAILJS_PUBLIC_KEY
   )
   .then(() => {
     alert("OTP sent");
@@ -45,7 +45,7 @@ export default function AuthPage({ onLoginSuccess }) {
   e.preventDefault();
   try {
 
-    const response = await axios.post('http://localhost:5000/api/auth/login', {
+    const response = await axios.post(`${API_BASE_URL}/api/auth/login`, {
       email,
       password
     });

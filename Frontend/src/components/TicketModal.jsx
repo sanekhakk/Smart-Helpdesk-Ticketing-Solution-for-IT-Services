@@ -12,6 +12,8 @@ const cleanAIReponse = (text) => {
 };
 
 const TicketModal = ({ isOpen, ticket, onClose, onTicketUpdated, user  }) => {
+  const API_BASE_URL = import.meta.env.VITE_API_URL;
+
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [step, setStep] = useState('form');
@@ -59,7 +61,7 @@ const TicketModal = ({ isOpen, ticket, onClose, onTicketUpdated, user  }) => {
     setMessages([userIssueMessage]);
 
     try {
-      const res = await axios.post('http://localhost:5000/api/tickets/create', { title, description, userId: user?.id });
+      const res = await axios.post(`${API_BASE_URL}/api/tickets/create`, { title, description, userId: user?.id });
       
       setTicketData(res.data);
       
@@ -89,7 +91,7 @@ const TicketModal = ({ isOpen, ticket, onClose, onTicketUpdated, user  }) => {
     setIsTyping(true);
 
     try {
-      const res = await axios.post('http://localhost:5000/api/tickets/chat', {
+      const res = await axios.post(`${API_BASE_URL}/api/tickets/chat`, {
         messages: updatedMessages,
         category: ticketData?.category || 'General',
         ticketId: ticketData?._id || ticketData?.id 
@@ -106,7 +108,7 @@ const TicketModal = ({ isOpen, ticket, onClose, onTicketUpdated, user  }) => {
     const id = ticketData?._id || ticketData?.id;
     if (!id) return;
     try {
-      await axios.patch(`http://localhost:5000/api/tickets/${id}/escalate`);
+      await axios.patch(`${API_BASE_URL}/api/tickets/${id}/escalate`);
       setMessages(prev => [...prev, { role: 'assistant', content: '✅ Escalated to a human agent.' }]);
      
       setTicketData(prev => ({ ...prev, status: 'Escalated' }));
@@ -123,7 +125,7 @@ const TicketModal = ({ isOpen, ticket, onClose, onTicketUpdated, user  }) => {
     
     try {
      
-      await axios.patch(`http://localhost:5000/api/tickets/${id}/close`, {
+      await axios.patch(`${API_BASE_URL}/api/tickets/${id}/close`, {
           adminFeedback: "Resolved by user via AI Chat"
       });
       

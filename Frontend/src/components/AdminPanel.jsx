@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { ShieldCheck, MessageSquare, Send, CheckCircle } from 'lucide-react';
 
 const AdminPanel = ({ tickets, onRefresh }) => {
+  const API_BASE_URL = import.meta.env.VITE_API_URL;
+
   const [resolution, setResolution] = useState('');
   const [resolvingId, setResolvingId] = useState(null);
 
@@ -10,7 +12,7 @@ const AdminPanel = ({ tickets, onRefresh }) => {
   const handleResolve = async (id) => {
     if (!resolution.trim()) return;
     try {
-      await fetch(`http://localhost:5000/api/tickets/${id}/close`, {
+      await fetch(`${API_BASE_URL}/api/tickets/${id}/close`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ adminFeedback: resolution })

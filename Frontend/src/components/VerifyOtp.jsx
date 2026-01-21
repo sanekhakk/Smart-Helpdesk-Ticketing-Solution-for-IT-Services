@@ -5,6 +5,8 @@ import { ShieldCheck, ArrowLeft, RefreshCw } from "lucide-react";
 import BgVideo from '../assets/AI_Ticketing_Helpdesk_Background_Video.mp4';
 
 export default function VerifyOtp({ onLoginSuccess }) {
+  const API_BASE_URL = import.meta.env.VITE_API_URL;
+
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [timer, setTimer] = useState(59);
   const [isLoading, setIsLoading] = useState(false);
@@ -46,7 +48,7 @@ export default function VerifyOtp({ onLoginSuccess }) {
 
     setIsLoading(true);
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/register", {
+      const res = await axios.post(`${API_BASE_URL}/api/auth/register`, {
         name: state.name,
         email: state.email,
         password: state.password,

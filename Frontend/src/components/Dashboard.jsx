@@ -20,6 +20,8 @@ import UserManagement from './UserManagement';
 import TicketHistory from './TicketHistory';
 import AdminHome from './AdminHome';
 
+
+
 const Dashboard = ({ onLogout,user }) => {
   const [tickets, setTickets] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -29,6 +31,9 @@ const Dashboard = ({ onLogout,user }) => {
   const [filterStatus, setFilterStatus] = useState('all');
   const [activeTab, setActiveTab] = useState('home');
   const [users, setUsers] = useState([]);
+
+  const API_BASE_URL = import.meta.env.VITE_API_URL;
+
   
   // New state to track which ticket's resolution is being viewed
   const [viewingResolutionTicket, setViewingResolutionTicket] = useState(null);
@@ -52,7 +57,7 @@ const Dashboard = ({ onLogout,user }) => {
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/auth/users');
+      const res = await fetch(`${API_BASE_URL}/api/auth/users`);
       const data = await res.json();
       setUsers(data);
     } catch (error) { console.error('Error fetching users:', error); }
@@ -71,8 +76,8 @@ const Dashboard = ({ onLogout,user }) => {
   if (!user?.id) return; 
   try {
     const url = user.role === 'admin' 
-      ? `http://localhost:5000/api/tickets` 
-      : `http://localhost:5000/api/tickets/user/${user.id}`;
+      ? `${API_BASE_URL}/api/tickets` 
+      : `${API_BASE_URL}/api/tickets/user/${user.id}`;
     const res = await fetch(url);
     const data = await res.json();
     setTickets(data);
@@ -110,7 +115,7 @@ const Dashboard = ({ onLogout,user }) => {
 
   const closeTicket = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/tickets/${id}/close`, {
+      const response = await fetch(`${API_BASE_URL}/api/tickets/${id}/close`, {
         method: 'PATCH',
       });
       
@@ -125,7 +130,7 @@ const Dashboard = ({ onLogout,user }) => {
 
   const escalateTicket = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/tickets/${id}/escalate`, {
+      const response = await fetch(`${API_BASE_URL}/api/tickets/${id}/escalate`, {
         method: 'PATCH',
       });
 
@@ -141,7 +146,7 @@ const Dashboard = ({ onLogout,user }) => {
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this ticket?')) return;
     try {
-      await fetch(`http://localhost:5000/api/tickets/${id}`, {
+      await fetch(`${API_BASE_URL}/api/tickets/${id}`, {
         method: 'DELETE',
       });
       fetchTickets();
